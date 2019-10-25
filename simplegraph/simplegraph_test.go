@@ -5,13 +5,15 @@ import (
 	"io/ioutil"
 	"os"
 	"testing"
+
+	"github.com/xavier268/arranger/arrangers"
 )
 
 func TestCreate(t *testing.T) {
 
 	g := NewGraph()
-	g.Add(1., 1., "11")
-	g.Add(1., 2., "12")
+	g.Add(1.654, 1., "11")
+	g.Add(0.654, 25., "12")
 	g.Add(2., 1., "21")
 	g.Add(2., 2., "22")
 
@@ -29,6 +31,13 @@ func TestCreate(t *testing.T) {
 
 	fmt.Println(g.ToSVG())
 	err := ioutil.WriteFile("test.svg", []byte(g.ToSVG()), os.ModePerm)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	arrangers.NewNormalizer().Arrange(g)
+	fmt.Println(g.ToSVG(), g.ToString())
+	err = ioutil.WriteFile("testNormalized.svg", []byte(g.ToSVG()), os.ModePerm)
 	if err != nil {
 		t.Fatal(err)
 	}
