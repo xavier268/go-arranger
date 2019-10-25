@@ -2,29 +2,29 @@ package arrangers
 
 import (
 	"fmt"
+	"math"
 	"testing"
 )
 
-func TestDistancerGradient(t *testing.T) {
-	eps := 0.000001
-	x, y, xx, yy := 0.5, 0.1, 0.9, 0.2
-	tgt := 0.33
-
-	// Compare computed and estimated gradient
-	dx, dy, dxx, dyy := dlosstarget(x, y, xx, yy, tgt)
-	ex, ey, exx, eyy := estimateddlosstarget(x, y, xx, yy, tgt, eps)
-	ex, ey, exx, eyy = dx-ex, dy-ey, dxx-exx, dyy-eyy
-	if ex > eps*10 || ey > eps*10 || exx > eps*10 || eyy > eps*10 {
-		fmt.Println("Errors between computed and estimated gradients")
-		fmt.Println(ex, ey, exx, eyy, " epsilon = ", eps)
-		t.Fatal("Gradient error is too large !")
-	}
+func TestDLossTarget(t *testing.T) {
+	compareTargetDistGrad(0.5, 0.1, 0.2, 0.3, 0.3333, t)
+	compareTargetDistGrad(0.5, 5, 12, 0.3, 0.3333, t)
+	compareTargetDistGrad(0.5, -2, 0.2, 0.3, 0.3333, t)
+	compareTargetDistGrad(0.5, 0.1, 0.2, -99, 14, t)
 }
 
-func estimateddlosstarget(x, y, xx, yy, tgt, eps float64) (dx, dy, dxx, dyy float64) {
-	return (losstarget(x+eps, y, xx, yy, tgt) - losstarget(x, y, xx, yy, tgt)) / eps,
-		(losstarget(x, y+eps, xx, yy, tgt) - losstarget(x, y, xx, yy, tgt)) / eps,
-		(losstarget(x, y, xx+eps, yy, tgt) - losstarget(x, y, xx, yy, tgt)) / eps,
-		(losstarget(x, y, xx, yy+eps, tgt) - losstarget(x, y, xx, yy, tgt)) / eps
-
+// Compare computed and estimated gradient
+func compareTargetDistGrad(x, y, xx, yy, tgt float64, t *testing.T) {
+	eps := 0.000001
+	dx, dy, dxx, dyy := dlosstarget(x, y, xx, yy, tgt)
+	ex, ey, exx, eyy := (losstarget(x+eps, y, xx, yy, tgt)-losstarget(x, y, xx, yy, tgt))/eps,
+		(losstarget(x, y+eps, xx, yy, tgt)-losstarget(x, y, xx, yy, tgt))/eps,
+		(losstarget(x, y, xx+eps, yy, tgt)-losstarget(x, y, xx, yy, tgt))/eps,
+		(losstarget(x, y, xx, yy+eps, tgt)-losstarget(x, y, xx, yy, tgt))/eps
+	ex, ey, exx, eyy = math.Abs(dx-ex), math.Abs(dy-ey), math.Abs(dxx-exx), math.Abs(dyy-eyy)
+	if ex > eps*100 || ey > eps*100 || exx > eps*100 || eyy > eps*100 {
+		fmt.Println("Errors between computed and estimated gradients is above ", eps*100)
+		fmt.Println(ex, ey, exx, eyy)
+		t.Fatal("Gradient error of dlosstarget is too large !")
+	}
 }
