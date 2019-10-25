@@ -11,7 +11,7 @@ import (
 type Graph struct {
 	x, y, size []float64                   // nodes
 	legend     []string                    // node legends
-	links      map[struct{ x, y int }]bool // edges
+	links      map[struct{ x, y int }]bool // edges, encoded with i<j
 }
 
 // Compiler checks interface contract ...
@@ -22,6 +22,12 @@ func NewGraph() *Graph {
 	g := new(Graph)
 	g.links = make(map[struct{ x, y int }]bool)
 	return g
+}
+
+// Size retun the number of nodes.
+// Nodes are numbered from O to Size -1.
+func (g *Graph) Size() int {
+	return len(g.x)
 }
 
 // Coord gets the position of node n.
@@ -36,17 +42,18 @@ func (g *Graph) Legend(n int) string {
 
 // Linked is true  if nodes i and j are connected.
 func (g *Graph) Linked(i, j int) bool {
+	if i == j {
+		return false
+	}
+	if i > j {
+		return g.Linked(j, i)
+	}
 	s := struct{ x, y int }{i, j}
 	b, ok := g.links[s]
 	if ok && b {
 		return true
 	}
 	return false
-}
-
-// ToSVG returns a SVG representation of g.
-func (g *Graph) ToSVG() string {
-	return "to be implemented"
 }
 
 // ToString human readable format (for debugging).
@@ -59,6 +66,12 @@ func (g *Graph) Add(x, y float64, legend string) int {
 	g.x, g.y = append(g.x, x), append(g.y, y)
 	g.legend = append(g.legend, legend)
 	return len(g.x) - 1
+}
+
+// Move node n to the specified postion.
+// All links are unchanged.
+func (g *Graph) Move(n int, x, y float64) {
+	g.x[n], g.y[n] = x, y
 }
 
 // Clone the Graph (deep copy).
@@ -80,5 +93,12 @@ func (g *Graph) Clone() *Graph {
 
 // Link establish a link between nodes i and j.
 func (g *Graph) Link(i, j int) {
+	if i == j {
+		return
+	}
+	if i > j {
+		g.Link(j, i)
+		return
+	}
 	g.links[struct{ x, y int }{i, j}] = true
 }

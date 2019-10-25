@@ -15,6 +15,8 @@ type Grapher interface {
 	ToSVG() string
 	// ToString provides a human readable format for debugging.
 	ToString() string
+	// Size provides the nb of nodes of the graph
+	Size() int
 }
 
 // EditGrapher is a graph that can be edited.
@@ -25,20 +27,12 @@ type EditGrapher interface {
 	// Remove a node from the graph.
 	// All links to the removed node are also removed.
 	Link(node1, node2 int)
+	// Move node n to the new position.
+	Move(node int, x, y float64)
 }
 
-// Arranger provides arranging capabilities to the graph.
-// It never modifies an existing graph.
+// Arranger provides the detailled loss function and corresponding gradient.
 type Arranger interface {
-	// Arrange returns a modified arranged copy of the original graph and the resukting loss value.
-	// The original grap is not modified.
-	Arrange(g Grapher) (Grapher, float64)
-}
-
-// Optimizer provides the detailled loss function and corresponding gradient.
-type Optimizer interface {
-	// Loss function associated with a given graph.
-	Loss(g Grapher) float64
-	// Gradient of the Loss function wrt the x and y positions of the nodes.
-	Gradient(g Grapher) (dx, dy []float64)
+	// Arrange modifies the provided graph and retuns the resulting loss value.
+	Arrange(g EditGrapher) float64
 }
