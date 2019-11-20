@@ -23,7 +23,7 @@ func (g *Graph) ToSVG() string {
 
 	for i := range g.x {
 		// Print nodes
-		x, y := m+int(mx*(g.x[i]+1)/2), m+int(my*(g.y[i]+1)/2)
+		x, y := m+int(mx*(1.+g.x[i])/2.), m+int(my*(1.+g.y[i])/2.)
 		l := g.Legend(i)
 		s += fmt.Sprintf("\n<circle cx=\"%d\" cy=\"%d\" r=\"%d\" stroke=\"red\" fill=\"transparent\" stroke-width=\"%d\"/>", x, y, r, w)
 		s += fmt.Sprintf("\n<text x=\"%d\" y=\"%d\" >%s</text>", x+r, y+r, l)
@@ -31,7 +31,7 @@ func (g *Graph) ToSVG() string {
 		// print links
 		for j := range g.x {
 			if i < j && g.Linked(i, j) {
-				xx, yy := m+int(mx*g.x[j]), m+int(my*g.y[j])
+				xx, yy := m+int(mx*(1.+g.x[j])/2.), m+int(my*(1.+g.y[j])/2.)
 				s += fmt.Sprintf("\n<line x1=\"%d\" y1=\"%d\" x2=\"%d\" y2=\"%d\" stroke=\"blue\" stroke-width=\"%d\"/>", x, y, xx, yy, w)
 			}
 		}
