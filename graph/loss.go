@@ -3,6 +3,7 @@ package graph
 import (
 	"fmt"
 	"math"
+	"math/rand"
 )
 
 // Loss computes a loss function for the graph.
@@ -91,15 +92,21 @@ func (g *Graph) DLoss(l2, distTargt, distTargtW, distMin, distMinW, clW float64)
 // Minimize will adjust the node position to minimize the loss function.
 // lambda is the step, iter is the nbr of iterations.
 func (g *Graph) Minimize(lambda, l2, distTargt, distTargtW, distMin, distMinW, clW float64, iter int) *Graph {
-	for it := 0; it < iter; it++ {
+	for it := 1; it <= iter; it++ {
 		dx, dy := g.DLoss(l2, distTargt, distTargtW, distMin, distMinW, clW)
+
+		// Annealing factor
+		ann := float64(iter) / float64(it)
+
 		for i := 0; i < g.Size(); i++ {
-			g.x[i] += -lambda * dx[i]
-			g.y[i] += -lambda * dy[i]
+			g.x[i] += lambda * (dx[i] + ann*rand.Float64())
+			g.y[i] += lambda * (dy[i] + ann*rand.Float64())
 		}
 
 		// Debug
-		fmt.Printf("\n%d : loss = %f", it, g.Loss(l2, distTargt, distTargtW, distMin, distMinW, clW))
+		if it%(iter/10) == 0 || it < 5 {
+			fmt.Printf("\n%d : loss = %f", it, g.Loss(l2, distTargt, distTargtW, distMin, distMinW, clW))
+		}
 	}
 	return g
 }
