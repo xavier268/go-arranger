@@ -6,11 +6,12 @@ import (
 	"math/rand"
 	"os"
 	"testing"
+	"time"
 )
 
 func TestNormalize(t *testing.T) {
 
-	rand.Seed(42)
+	rand.Seed(time.Now().Unix())
 
 	g := NewGraph()
 	g.Add(0, 0, "")
@@ -62,6 +63,15 @@ func TestArrange(t *testing.T) {
 	g.Link(4, 2)
 	g.Link(4, 3)
 
+	g.Add(0.8, 5, "5")
+	g.Add(0.6, 8, "6")
+	g.Add(0.5, 3, "7")
+	g.Link(6, 7)
+	g.Link(7, 5)
+	g.Link(5, 6)
+
+	g.Link(1, 6)
+
 	err = ioutil.WriteFile("test.svg", []byte(g.ToSVG()), os.ModePerm)
 	if err != nil {
 		t.Fatal(err)
@@ -74,7 +84,7 @@ func TestArrange(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	g.Minimize(0.01, 0.1, 0.1, 0.3, 2000).Normalize()
+	g.Shuffle().Minimize(0.01, 0.1, 0.01, .1, 500).Normalize()
 
 	err = ioutil.WriteFile("test_minimized_normalized.svg", []byte(g.ToSVG()), os.ModePerm)
 	if err != nil {
