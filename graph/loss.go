@@ -6,7 +6,7 @@ import (
 	"math/rand"
 )
 
-// LossParam defines the parameter for optimization.
+// LossParam defines the parameter setting used for optimization.
 type LossParam struct {
 	l2, distTargt, distTargtW, distMin, distMinW, clW float64
 	iter                                              int
@@ -97,7 +97,9 @@ func (g *Graph) DLoss(lp *LossParam) (dx, dy []float64) {
 }
 
 // Minimize will adjust the node position to minimize the loss function.
-// lambda is the step, iter is the nbr of iterations.
+// lambda is the step precision, iter is the nbr of iterations.
+// Annealing is implemented with random values to attempt to capture global minimum, not being stuck with local minimum.
+// Results are currently highly sensitive to the LossParam parameters.
 func (g *Graph) Minimize(lp *LossParam) *Graph {
 	for it := 1; it <= lp.iter; it++ {
 		dx, dy := g.DLoss(lp)
