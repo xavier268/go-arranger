@@ -6,6 +6,13 @@ import (
 	"math/rand"
 )
 
+// LossParam defines the parameter for optimization.
+type LossParam struct {
+	l2, distTargt, distTargtW, distMin, distMinW, clW float64
+	iter                                              int
+	lambda                                            float64
+}
+
 // Loss computes a loss function for the graph.
 // Arranging will mean minimizing this loss value.
 // l2 is the regularization weight,
@@ -14,7 +21,7 @@ import (
 // distMin is a MINIMUM distance to try to keep for NON connected nodes,
 // distMinW is the associated weight,
 // clW is the cumulative length weight for connected nodes
-func (g *Graph) Loss(l2, distTargt, distTargtW, distMin, distMinW, clW float64) (loss float64) {
+func (g *Graph) Loss(lp *LossParam) (loss float64) {
 
 	// Ensure  sizes remain reasonable (explicit l2 regularization)
 	for _, x := range g.x {
@@ -23,23 +30,23 @@ func (g *Graph) Loss(l2, distTargt, distTargtW, distMin, distMinW, clW float64) 
 	for _, y := range g.y {
 		loss += y * y
 	}
-	loss = loss * l2
+	loss = loss * lp.l2
 
 	for i := 0; i < g.Size(); i++ {
 		for j := i + 1; j < g.Size(); j++ {
 			if g.Linked(i, j) {
 				// Connected links as compared to target
 				d := g.Dist2(i, j)
-				loss += distTargtW * (d - distTargt) * (d - distTargt)
+				loss += lp.distTargtW * (d - lp.distTargt) * (d - lp.distTargt)
 
 				// Cumulative length penalty
-				loss += clW * math.Sqrt(d)
+				loss += lp.clW * math.Sqrt(d)
 
 			} else {
 				// Not connected penalty if below distMin
 				d := g.Dist2(i, j)
-				if d < distMin {
-					loss += distMinW * (distMin - d)
+				if d < lp.distMin {
+					loss += lp.distMinW * (lp.distMin - d)
 				}
 			}
 		}
@@ -48,14 +55,14 @@ func (g *Graph) Loss(l2, distTargt, distTargtW, distMin, distMinW, clW float64) 
 }
 
 // DLoss computes the gradient of the loss function w.r.t. the x and y coordinates.
-func (g *Graph) DLoss(l2, distTargt, distTargtW, distMin, distMinW, clW float64) (dx, dy []float64) {
+func (g *Graph) DLoss(lp *LossParam) (dx, dy []float64) {
 
 	dx, dy = make([]float64, g.Size()), make([]float64, g.Size())
 	for i, x := range g.x {
-		dx[i] = l2 * 2 * x
+		dx[i] = lp.l2 * 2 * x
 	}
 	for j, y := range g.y {
-		dy[j] = l2 * 2 * y
+		dy[j] = lp.l2 * 2 * y
 	}
 
 	for i := 0; i < g.Size(); i++ {
@@ -63,25 +70,25 @@ func (g *Graph) DLoss(l2, distTargt, distTargtW, distMin, distMinW, clW float64)
 			if g.Linked(i, j) {
 				// target length
 				d := g.Dist2(i, j)
-				dx[i] += distTargtW * 2 * (d - distTargt) * (2 * g.x[i])
-				dx[j] += distTargtW * 2 * (d - distTargt) * (2 * g.x[j])
-				dy[i] += distTargtW * 2 * (d - distTargt) * (2 * g.y[i])
-				dy[j] += distTargtW * 2 * (d - distTargt) * (2 * g.y[j])
+				dx[i] += lp.distTargtW * 2 * (d - lp.distTargt) * (2 * g.x[i])
+				dx[j] += lp.distTargtW * 2 * (d - lp.distTargt) * (2 * g.x[j])
+				dy[i] += lp.distTargtW * 2 * (d - lp.distTargt) * (2 * g.y[i])
+				dy[j] += lp.distTargtW * 2 * (d - lp.distTargt) * (2 * g.y[j])
 
 				// Cumulatif length penanlty
 				dd := math.Sqrt(d)
-				dx[i] += -clW * g.x[i] / dd
-				dx[j] += -clW * g.x[j] / dd
-				dy[i] += -clW * g.y[i] / dd
-				dy[j] += -clW * g.y[j] / dd
+				dx[i] += -lp.clW * g.x[i] / dd
+				dx[j] += -lp.clW * g.x[j] / dd
+				dy[i] += -lp.clW * g.y[i] / dd
+				dy[j] += -lp.clW * g.y[j] / dd
 
 			} else {
 				d := g.Dist2(i, j)
-				if d < distMin {
-					dx[i] += -distMinW * (2 * g.x[i])
-					dx[j] += -distMinW * (2 * g.x[j])
-					dy[i] += -distMinW * (2 * g.y[i])
-					dy[j] += -distMinW * (2 * g.y[j])
+				if d < lp.distMin {
+					dx[i] += -lp.distMinW * (2 * g.x[i])
+					dx[j] += -lp.distMinW * (2 * g.x[j])
+					dy[i] += -lp.distMinW * (2 * g.y[i])
+					dy[j] += -lp.distMinW * (2 * g.y[j])
 				}
 			}
 		}
@@ -91,21 +98,21 @@ func (g *Graph) DLoss(l2, distTargt, distTargtW, distMin, distMinW, clW float64)
 
 // Minimize will adjust the node position to minimize the loss function.
 // lambda is the step, iter is the nbr of iterations.
-func (g *Graph) Minimize(lambda, l2, distTargt, distTargtW, distMin, distMinW, clW float64, iter int) *Graph {
-	for it := 1; it <= iter; it++ {
-		dx, dy := g.DLoss(l2, distTargt, distTargtW, distMin, distMinW, clW)
+func (g *Graph) Minimize(lp *LossParam) *Graph {
+	for it := 1; it <= lp.iter; it++ {
+		dx, dy := g.DLoss(lp)
 
 		// Annealing factor
-		ann := float64(iter) / float64(it)
+		ann := float64(lp.iter) / float64(it)
 
 		for i := 0; i < g.Size(); i++ {
-			g.x[i] += lambda * (dx[i] + ann*rand.Float64())
-			g.y[i] += lambda * (dy[i] + ann*rand.Float64())
+			g.x[i] += lp.lambda * (dx[i] + ann*rand.Float64())
+			g.y[i] += lp.lambda * (dy[i] + ann*rand.Float64())
 		}
 
 		// Debug
-		if it%(iter/10) == 0 || it < 5 {
-			fmt.Printf("\n%d : loss = %f", it, g.Loss(l2, distTargt, distTargtW, distMin, distMinW, clW))
+		if it%(lp.iter/10) == 0 || it < 5 {
+			fmt.Printf("\n%d : loss = %f", it, g.Loss(lp))
 		}
 	}
 	return g

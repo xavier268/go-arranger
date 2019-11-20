@@ -9,6 +9,19 @@ import (
 	"time"
 )
 
+var lptest = new(LossParam)
+
+func init() {
+	lptest.lambda = 0.00001
+	lptest.l2 = 0.001
+	lptest.distTargt = 0.3
+	lptest.distTargtW = 1.
+	lptest.distMin = 0.3
+	lptest.distMinW = 1.
+	lptest.clW = 5.
+	lptest.iter = 500
+}
+
 func TestNormalize(t *testing.T) {
 
 	rand.Seed(time.Now().Unix())
@@ -88,14 +101,14 @@ func TestArrange(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	g.Minimize(0.000001, 0.1, 0.3, 5., .3, 1, 1., 1000).Normalize()
+	g.Minimize(lptest).Normalize()
 
 	err = ioutil.WriteFile("test_minimized_normalized.svg", []byte(g.ToSVG()), os.ModePerm)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	g.Shuffle().Minimize(0.000001, 0.1, 0.3, 5., .3, 1, 1., 1000).Normalize()
+	g.Shuffle().Minimize(lptest).Normalize()
 	err = ioutil.WriteFile("test_shuffled_minimized_normalized.svg", []byte(g.ToSVG()), os.ModePerm)
 	if err != nil {
 		t.Fatal(err)
