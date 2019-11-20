@@ -1,7 +1,7 @@
 package graph
 
-// Normalize graph, bringing all nodes values between 0 and 1.
-func (g *Graph) Normalize() {
+// Normalize graph, bringing all nodes values between -1 and 1.
+func (g *Graph) Normalize() *Graph {
 
 	if g.Size() == 0 {
 		return
@@ -33,7 +33,8 @@ func (g *Graph) Normalize() {
 		x, y := g.Coord(i)
 		xx, yy := x-minx, y-miny // shift
 		xx, yy = xx/sx, yy/sy    // scale
-		g.x[i], g.y[i] = xx, yy
+		// xx,yy are between 0 and 1.
+		g.x[i], g.y[i] = 2*xx-1, 2*yy-1
 	}
-
+	return g
 }

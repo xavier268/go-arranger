@@ -5,9 +5,9 @@ import "fmt"
 
 // Graph implements a basic, non directed graph.
 type Graph struct {
-	x, y, size []float64                   // nodes
-	legend     []string                    // node legends
-	links      map[struct{ x, y int }]bool // edges, encoded with i<j
+	x, y   []float64                   // nodes
+	legend []string                    // node legends
+	links  map[struct{ x, y int }]bool // edges, encoded with i<j
 }
 
 // NewGraph creates a new, empty Graph.

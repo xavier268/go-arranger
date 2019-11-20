@@ -71,7 +71,7 @@ func (g *Graph) DLoss(l2, dist, distMin float64) (dx, dy []float64) {
 
 // Minimize will adjust the node position to minimize the loss function.
 // lambda is the step, iter is the nbr of iterations.
-func (g *Graph) Minimize(lambda, l2, dist, distMin float64, iter int) {
+func (g *Graph) Minimize(lambda, l2, dist, distMin float64, iter int) *Graph {
 	for it := 0; it < iter; it++ {
 		dx, dy := g.DLoss(l2, dist, distMin)
 		for i := 0; i < g.Size(); i++ {
@@ -82,5 +82,5 @@ func (g *Graph) Minimize(lambda, l2, dist, distMin float64, iter int) {
 		// Debug
 		fmt.Printf("\n%d : loss = %f", it, g.Loss(l2, dist, distMin))
 	}
-
+	return g
 }

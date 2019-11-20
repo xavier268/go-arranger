@@ -2,11 +2,37 @@ package graph
 
 import (
 	"io/ioutil"
+	"log"
+	"math/rand"
 	"os"
 	"testing"
 )
 
-func TestCreate(t *testing.T) {
+func TestNormalize(t *testing.T) {
+
+	rand.Seed(42)
+
+	g := NewGraph()
+	g.Add(0, 0, "")
+	g.Add(0, 0, "")
+	g.Add(0, 0, "")
+	g.Add(0, 0, "")
+	g.Add(0, 0, "")
+	g.Add(0, 0, "")
+	g.Add(0, 0, "")
+	g.Add(0, 0, "")
+	g.Add(0, 0, "")
+
+	g.Shuffle().Normalize()
+
+	for i := range g.x {
+		if g.x[i] > 1 || g.x[i] < -1 || g.y[i] > 1 || g.y[i] < -1 {
+			log.Fatal(g.ToString())
+		}
+	}
+
+}
+func TestArrange(t *testing.T) {
 
 	var err error
 
@@ -48,8 +74,7 @@ func TestCreate(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	g.Minimize(0.1, 0.01, 0.1, 0.3, 200)
-	g.Normalize()
+	g.Minimize(0.01, 0.1, 0.1, 0.3, 2000).Normalize()
 
 	err = ioutil.WriteFile("test_minimized_normalized.svg", []byte(g.ToSVG()), os.ModePerm)
 	if err != nil {
