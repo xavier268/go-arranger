@@ -1,21 +1,14 @@
-// Package simplegraph implements a basic but updatable graph.
-package simplegraph
+// Package graph implements a basic but updatable graph.
+package graph
 
-import (
-	"fmt"
+import "fmt"
 
-	"github.com/xavier268/arranger/common"
-)
-
-// Graph implements the EditGrapher interface.
+// Graph implements a basic, non directed graph.
 type Graph struct {
 	x, y, size []float64                   // nodes
 	legend     []string                    // node legends
 	links      map[struct{ x, y int }]bool // edges, encoded with i<j
 }
-
-// Compiler checks interface contract ...
-var _ common.EditGrapher = new(Graph)
 
 // NewGraph creates a new, empty Graph.
 func NewGraph() *Graph {
@@ -68,29 +61,6 @@ func (g *Graph) Add(x, y float64, legend string) int {
 	return len(g.x) - 1
 }
 
-// Move node n to the specified postion.
-// All links are unchanged.
-func (g *Graph) Move(n int, x, y float64) {
-	g.x[n], g.y[n] = x, y
-}
-
-// Clone the Graph (deep copy).
-func (g *Graph) Clone() *Graph {
-	gg := NewGraph()
-	for i := range g.x {
-		ii := gg.Add(g.x[i], g.y[i], g.legend[i])
-		if ii != i {
-			panic("Inconstitent internal structure while cloning ?!")
-		}
-		for j := range g.x {
-			if g.Linked(i, j) {
-				gg.Link(i, j)
-			}
-		}
-	}
-	return gg
-}
-
 // Link establish a link between nodes i and j.
 func (g *Graph) Link(i, j int) {
 	if i == j {
@@ -101,4 +71,9 @@ func (g *Graph) Link(i, j int) {
 		return
 	}
 	g.links[struct{ x, y int }{i, j}] = true
+}
+
+// Dist2 provides the squared distance between two nodes
+func (g *Graph) Dist2(i, j int) float64 {
+	return (g.x[i]-g.x[j])*(g.x[i]-g.x[j]) + (g.y[i]-g.y[j])*(g.y[i]-g.y[j])
 }

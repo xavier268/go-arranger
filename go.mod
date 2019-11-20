@@ -1,1 +1,1 @@
-module github.com/xavier268/arranger
+module github.com/xavier268/go-arranger

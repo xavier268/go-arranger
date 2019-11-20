@@ -1,14 +1,14 @@
-package simplegraph
+package graph
 
 import "fmt"
 
 // ToSVG returns a SVG representation of g.
 func (g *Graph) ToSVG() string {
 
-	r := 5                        // radius
-	w := 2                        // stroke width
-	m := 30                       // margin of display
-	var mx, my float64 = 400, 200 // Width and  height of display
+	r := 5                         // radius for nodes
+	w := 2                         // stroke width
+	m := 30                        // margin of display
+	var mx, my float64 = 1200, 600 // Width and  height of display in pixels
 
 	s := `
 	<svg version="1.1"
