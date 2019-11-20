@@ -54,7 +54,7 @@ func (g *Graph) ToString() string {
 	return fmt.Sprint(*g)
 }
 
-// Add adds a node.
+// Add adds a node, returning its index.
 func (g *Graph) Add(x, y float64, legend string) int {
 	g.x, g.y = append(g.x, x), append(g.y, y)
 	g.legend = append(g.legend, legend)
@@ -62,6 +62,8 @@ func (g *Graph) Add(x, y float64, legend string) int {
 }
 
 // Link establish a link between nodes i and j.
+// Self linking is ignored.
+// Links are symetrical, if (i,j) are linked, (j,i) will be.
 func (g *Graph) Link(i, j int) {
 	if i == j {
 		return
