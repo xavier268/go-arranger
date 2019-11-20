@@ -89,27 +89,27 @@ func TestArrange(t *testing.T) {
 	g.Link(7, 1)
 	g.Link(5, 0)
 
-	err = ioutil.WriteFile("test.svg", []byte(g.ToSVG()), os.ModePerm)
+	err = ioutil.WriteFile("ex.svg", []byte(g.ToSVG()), os.ModePerm)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	g.Normalize()
 
-	err = ioutil.WriteFile("test_normalized.svg", []byte(g.ToSVG()), os.ModePerm)
+	err = ioutil.WriteFile("ex_normalized.svg", []byte(g.ToSVG()), os.ModePerm)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	g.Minimize(lptest).Normalize()
 
-	err = ioutil.WriteFile("test_minimized_normalized.svg", []byte(g.ToSVG()), os.ModePerm)
+	err = ioutil.WriteFile("ex_minimized_normalized.svg", []byte(g.ToSVG()), os.ModePerm)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	g.Shuffle().Minimize(lptest).Normalize()
-	err = ioutil.WriteFile("test_shuffled_minimized_normalized.svg", []byte(g.ToSVG()), os.ModePerm)
+	err = ioutil.WriteFile("ex_shuffled_minimized_normalized.svg", []byte(g.ToSVG()), os.ModePerm)
 	if err != nil {
 		t.Fatal(err)
 	}
