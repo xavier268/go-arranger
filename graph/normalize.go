@@ -4,7 +4,7 @@ package graph
 func (g *Graph) Normalize() *Graph {
 
 	if g.Size() == 0 {
-		return
+		return g
 	}
 
 	// Min & max of current coord.
