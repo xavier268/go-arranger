@@ -15,9 +15,11 @@ import (
 // DistMinW is the associated weight,
 // Clw is the cumulative length weight for connected nodes
 // Repw is the weight for the repulsion force between any nodes
+// AnnW is the Annealing Weight
 type WithLossCombined struct {
 	*Graph
 	L2, DistTargt, DistTargtW, DistMin, DistMinW, Clw, Repw float64
+	AnnW                                                    float64
 	Iter                                                    int
 	Lambda                                                  float64
 }
@@ -37,6 +39,7 @@ func NewWithLossCombined(gg *Graph) *WithLossCombined {
 	g.Clw = 1.
 	g.Repw = 1.
 	g.Iter = 1
+	g.AnnW = 0.
 
 	return g
 }
@@ -94,32 +97,32 @@ func (g *WithLossCombined) DLoss() (dx, dy []float64) {
 			// repulsion cost
 			d := g.Dist2(i, j)
 			d2 := d * d
-			dx[i] += -2 * g.Repw * g.x[i] / d2
-			dx[j] += -2 * g.Repw * g.x[j] / d2
-			dy[i] += -2 * g.Repw * g.y[i] / d2
-			dy[j] += -2 * g.Repw * g.y[j] / d2
+			dx[i] += -2 * g.Repw * (g.x[i] - g.x[j]) / d2
+			dx[j] += -2 * g.Repw * (g.x[j] - g.x[i]) / d2
+			dy[i] += -2 * g.Repw * (g.y[i] - g.y[j]) / d2
+			dy[j] += -2 * g.Repw * (g.y[j] - g.y[i]) / d2
 
 			if g.Linked(i, j) {
 				// target length
 
-				dx[i] += g.DistTargtW * 2 * (d - g.DistTargt) * (2 * g.x[i])
-				dx[j] += g.DistTargtW * 2 * (d - g.DistTargt) * (2 * g.x[j])
-				dy[i] += g.DistTargtW * 2 * (d - g.DistTargt) * (2 * g.y[i])
-				dy[j] += g.DistTargtW * 2 * (d - g.DistTargt) * (2 * g.y[j])
+				dx[i] += g.DistTargtW * 2 * (d - g.DistTargt) * (2 * (g.x[i] - g.x[j]))
+				dx[j] += g.DistTargtW * 2 * (d - g.DistTargt) * (2 * (g.x[j] - g.x[i]))
+				dy[i] += g.DistTargtW * 2 * (d - g.DistTargt) * (2 * (g.y[i] - g.y[j]))
+				dy[j] += g.DistTargtW * 2 * (d - g.DistTargt) * (2 * (g.y[j] - g.y[i]))
 
 				// Cumulatif length penanlty
 				dd := math.Sqrt(d)
-				dx[i] += -g.Clw * g.x[i] / dd
-				dx[j] += -g.Clw * g.x[j] / dd
-				dy[i] += -g.Clw * g.y[i] / dd
-				dy[j] += -g.Clw * g.y[j] / dd
+				dx[i] += -g.Clw * (g.x[i] - g.x[j]) / dd
+				dx[j] += -g.Clw * (g.x[j] - g.x[i]) / dd
+				dy[i] += -g.Clw * (g.y[i] - g.y[j]) / dd
+				dy[j] += -g.Clw * (g.y[j] - g.y[i]) / dd
 
 			} else {
 				if d < g.DistMin {
-					dx[i] += -g.DistMinW * (2 * g.x[i])
-					dx[j] += -g.DistMinW * (2 * g.x[j])
-					dy[i] += -g.DistMinW * (2 * g.y[i])
-					dy[j] += -g.DistMinW * (2 * g.y[j])
+					dx[i] += -g.DistMinW * (2 * (g.x[i] - g.x[j]))
+					dx[j] += -g.DistMinW * (2 * (g.x[j] - g.x[i]))
+					dy[i] += -g.DistMinW * (2 * (g.y[i] - g.y[j]))
+					dy[j] += -g.DistMinW * (2 * (g.y[j] - g.y[i]))
 				}
 			}
 		}
@@ -136,7 +139,7 @@ func (g *WithLossCombined) Minimize() {
 		dx, dy := g.DLoss()
 
 		// Annealing factor
-		ann := float64(g.Iter) / float64(it)
+		ann := g.AnnW * float64(g.Iter) / float64(it)
 
 		for i := 0; i < g.Size(); i++ {
 			g.x[i] += g.Lambda * (dx[i] + ann*rand.Float64())

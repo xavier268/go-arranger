@@ -39,15 +39,16 @@ func TestArrange(t *testing.T) {
 	var err error
 
 	g := NewWithLossCombined(NewGraph())
-	g.Lambda = 0.000001
-	g.L2 = 0.001
-	g.DistTargt = 0.3
-	g.DistTargtW = 0.01
-	g.DistMin = 0.2
-	g.DistMinW = 0.01
+	g.Lambda = 1e-7
+	g.L2 = 1e-2
+	g.DistTargt = 0.2
+	g.DistTargtW = 0.1
+	g.DistMin = 0.1
+	g.DistMinW = 0.1
 	g.Clw = 10.
-	g.Repw = 0.1
+	g.Repw = 1.
 	g.Iter = 500
+	g.AnnW = 0.
 
 	g.Add(1.654, 1., "0")
 	g.Add(0.654, 25., "1")

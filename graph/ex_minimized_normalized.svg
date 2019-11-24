@@ -6,36 +6,36 @@
 	xmlns:ev="http://www.w3.org/2001/xml-events">
 	
 <rect x="30" y="30" width="1200" height="600" stroke="grey" fill="transparent" />
-<circle cx="1230" cy="30" r="5" stroke="red" fill="transparent" stroke-width="2"/>
-<text x="1235" y="35" >0</text>
-<line x1="1230" y1="30" x2="1089" y2="133" stroke="blue" stroke-width="2"/>
-<line x1="1230" y1="30" x2="30" y2="584" stroke="blue" stroke-width="2"/>
-<line x1="1230" y1="30" x2="1073" y2="30" stroke="blue" stroke-width="2"/>
-<line x1="1230" y1="30" x2="1111" y2="48" stroke="blue" stroke-width="2"/>
-<circle cx="1089" cy="133" r="5" stroke="red" fill="transparent" stroke-width="2"/>
-<text x="1094" y="138" >1</text>
-<line x1="1089" y1="133" x2="32" y2="630" stroke="blue" stroke-width="2"/>
-<line x1="1089" y1="133" x2="1073" y2="30" stroke="blue" stroke-width="2"/>
-<line x1="1089" y1="133" x2="1085" y2="61" stroke="blue" stroke-width="2"/>
-<line x1="1089" y1="133" x2="1076" y2="42" stroke="blue" stroke-width="2"/>
-<circle cx="32" cy="630" r="5" stroke="red" fill="transparent" stroke-width="2"/>
-<text x="37" y="635" >2</text>
-<line x1="32" y1="630" x2="30" y2="584" stroke="blue" stroke-width="2"/>
-<line x1="32" y1="630" x2="1073" y2="30" stroke="blue" stroke-width="2"/>
-<circle cx="30" cy="584" r="5" stroke="red" fill="transparent" stroke-width="2"/>
-<text x="35" y="589" >3</text>
-<line x1="30" y1="584" x2="1073" y2="30" stroke="blue" stroke-width="2"/>
-<line x1="30" y1="584" x2="1111" y2="48" stroke="blue" stroke-width="2"/>
-<circle cx="1073" cy="30" r="5" stroke="red" fill="transparent" stroke-width="2"/>
-<text x="1078" y="35" >4</text>
-<line x1="1073" y1="30" x2="1085" y2="61" stroke="blue" stroke-width="2"/>
-<circle cx="1111" cy="48" r="5" stroke="red" fill="transparent" stroke-width="2"/>
-<text x="1116" y="53" >5</text>
-<line x1="1111" y1="48" x2="1085" y2="61" stroke="blue" stroke-width="2"/>
-<line x1="1111" y1="48" x2="1076" y2="42" stroke="blue" stroke-width="2"/>
-<circle cx="1085" cy="61" r="5" stroke="red" fill="transparent" stroke-width="2"/>
-<text x="1090" y="66" >6</text>
-<line x1="1085" y1="61" x2="1076" y2="42" stroke="blue" stroke-width="2"/>
-<circle cx="1076" cy="42" r="5" stroke="red" fill="transparent" stroke-width="2"/>
-<text x="1081" y="47" >7</text>
+<circle cx="-9223372036854775778" cy="-9223372036854775778" r="5" stroke="red" fill="transparent" stroke-width="2"/>
+<text x="-9223372036854775773" y="-9223372036854775773" >0</text>
+<line x1="-9223372036854775778" y1="-9223372036854775778" x2="-9223372036854775778" y2="-9223372036854775778" stroke="blue" stroke-width="2"/>
+<line x1="-9223372036854775778" y1="-9223372036854775778" x2="-9223372036854775778" y2="-9223372036854775778" stroke="blue" stroke-width="2"/>
+<line x1="-9223372036854775778" y1="-9223372036854775778" x2="-9223372036854775778" y2="-9223372036854775778" stroke="blue" stroke-width="2"/>
+<line x1="-9223372036854775778" y1="-9223372036854775778" x2="-9223372036854775778" y2="-9223372036854775778" stroke="blue" stroke-width="2"/>
+<circle cx="-9223372036854775778" cy="-9223372036854775778" r="5" stroke="red" fill="transparent" stroke-width="2"/>
+<text x="-9223372036854775773" y="-9223372036854775773" >1</text>
+<line x1="-9223372036854775778" y1="-9223372036854775778" x2="-9223372036854775778" y2="-9223372036854775778" stroke="blue" stroke-width="2"/>
+<line x1="-9223372036854775778" y1="-9223372036854775778" x2="-9223372036854775778" y2="-9223372036854775778" stroke="blue" stroke-width="2"/>
+<line x1="-9223372036854775778" y1="-9223372036854775778" x2="-9223372036854775778" y2="-9223372036854775778" stroke="blue" stroke-width="2"/>
+<line x1="-9223372036854775778" y1="-9223372036854775778" x2="-9223372036854775778" y2="-9223372036854775778" stroke="blue" stroke-width="2"/>
+<circle cx="-9223372036854775778" cy="-9223372036854775778" r="5" stroke="red" fill="transparent" stroke-width="2"/>
+<text x="-9223372036854775773" y="-9223372036854775773" >2</text>
+<line x1="-9223372036854775778" y1="-9223372036854775778" x2="-9223372036854775778" y2="-9223372036854775778" stroke="blue" stroke-width="2"/>
+<line x1="-9223372036854775778" y1="-9223372036854775778" x2="-9223372036854775778" y2="-9223372036854775778" stroke="blue" stroke-width="2"/>
+<circle cx="-9223372036854775778" cy="-9223372036854775778" r="5" stroke="red" fill="transparent" stroke-width="2"/>
+<text x="-9223372036854775773" y="-9223372036854775773" >3</text>
+<line x1="-9223372036854775778" y1="-9223372036854775778" x2="-9223372036854775778" y2="-9223372036854775778" stroke="blue" stroke-width="2"/>
+<line x1="-9223372036854775778" y1="-9223372036854775778" x2="-9223372036854775778" y2="-9223372036854775778" stroke="blue" stroke-width="2"/>
+<circle cx="-9223372036854775778" cy="-9223372036854775778" r="5" stroke="red" fill="transparent" stroke-width="2"/>
+<text x="-9223372036854775773" y="-9223372036854775773" >4</text>
+<line x1="-9223372036854775778" y1="-9223372036854775778" x2="-9223372036854775778" y2="-9223372036854775778" stroke="blue" stroke-width="2"/>
+<circle cx="-9223372036854775778" cy="-9223372036854775778" r="5" stroke="red" fill="transparent" stroke-width="2"/>
+<text x="-9223372036854775773" y="-9223372036854775773" >5</text>
+<line x1="-9223372036854775778" y1="-9223372036854775778" x2="-9223372036854775778" y2="-9223372036854775778" stroke="blue" stroke-width="2"/>
+<line x1="-9223372036854775778" y1="-9223372036854775778" x2="-9223372036854775778" y2="-9223372036854775778" stroke="blue" stroke-width="2"/>
+<circle cx="-9223372036854775778" cy="-9223372036854775778" r="5" stroke="red" fill="transparent" stroke-width="2"/>
+<text x="-9223372036854775773" y="-9223372036854775773" >6</text>
+<line x1="-9223372036854775778" y1="-9223372036854775778" x2="-9223372036854775778" y2="-9223372036854775778" stroke="blue" stroke-width="2"/>
+<circle cx="-9223372036854775778" cy="-9223372036854775778" r="5" stroke="red" fill="transparent" stroke-width="2"/>
+<text x="-9223372036854775773" y="-9223372036854775773" >7</text>
 </svg>
