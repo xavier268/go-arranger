@@ -55,15 +55,15 @@ func TestArrange(t *testing.T) {
 
 	g := NewWithLossCombined(NewGraph())
 	g.Lambda = 1e-5
-	g.L2 = 1e-4
+	g.L2 = 1e-6
 	g.DistTargt = 0.2
-	g.DistTargtW = 0.
+	g.DistTargtW = 1.
 	g.DistMin = 0.01
 	g.DistMinW = 0.1
 	g.Clw = 1
-	g.Repw = 1
-	g.Iter = 1000
-	g.AnnW = 0.
+	g.Repw = 5
+	g.Iter = 5000
+	g.AnnW = 1.
 
 	g.Add(1.654, 1., "0")
 	g.Add(0.654, 25., "1")
@@ -114,7 +114,7 @@ func TestArrange(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-
+	fmt.Println("\n-----------------")
 	g.Minimize()
 	g.Normalize()
 
@@ -124,6 +124,7 @@ func TestArrange(t *testing.T) {
 	}
 
 	g.Shuffle()
+	fmt.Println("\n-----------------")
 	g.Minimize()
 	g.Normalize()
 	err = ioutil.WriteFile("ex_shuffled_minimized_normalized.svg", []byte(g.ToSVG()), os.ModePerm)
