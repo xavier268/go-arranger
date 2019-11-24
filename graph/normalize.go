@@ -1,10 +1,10 @@
 package graph
 
 // Normalize graph, bringing all nodes values between -1 and 1.
-func (g *Graph) Normalize() *Graph {
+func (g *Graph) Normalize() {
 
 	if g.Size() == 0 {
-		return g
+		return
 	}
 
 	// Min & max of current coord.
@@ -36,5 +36,4 @@ func (g *Graph) Normalize() *Graph {
 		// xx,yy are between 0 and 1.
 		g.x[i], g.y[i] = 2*xx-1, 2*yy-1
 	}
-	return g
 }

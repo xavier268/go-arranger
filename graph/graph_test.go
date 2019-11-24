@@ -9,19 +9,6 @@ import (
 	"time"
 )
 
-var lptest = new(LossParam)
-
-func init() {
-	lptest.lambda = 0.00001
-	lptest.l2 = 0.001
-	lptest.distTargt = 0.3
-	lptest.distTargtW = 1.
-	lptest.distMin = 0.3
-	lptest.distMinW = 1.
-	lptest.clW = 5.
-	lptest.iter = 500
-}
-
 func TestNormalize(t *testing.T) {
 
 	rand.Seed(time.Now().Unix())
@@ -37,7 +24,8 @@ func TestNormalize(t *testing.T) {
 	g.Add(0, 0, "")
 	g.Add(0, 0, "")
 
-	g.Shuffle().Normalize()
+	g.Shuffle()
+	g.Normalize()
 
 	for i := range g.x {
 		if g.x[i] > 1 || g.x[i] < -1 || g.y[i] > 1 || g.y[i] < -1 {
@@ -50,7 +38,16 @@ func TestArrange(t *testing.T) {
 
 	var err error
 
-	g := NewGraph()
+	g := NewWithLossCombined(NewGraph())
+	g.lambda = 0.00001
+	g.l2 = 0.001
+	g.distTargt = 0.3
+	g.distTargtW = 1.
+	g.distMin = 0.3
+	g.distMinW = 1.
+	g.clW = 5.
+	g.iter = 500
+
 	g.Add(1.654, 1., "0")
 	g.Add(0.654, 25., "1")
 	g.Add(2., 1., "2")
@@ -101,14 +98,17 @@ func TestArrange(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	g.Minimize(lptest).Normalize()
+	g.Minimize()
+	g.Normalize()
 
 	err = ioutil.WriteFile("ex_minimized_normalized.svg", []byte(g.ToSVG()), os.ModePerm)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	g.Shuffle().Minimize(lptest).Normalize()
+	g.Shuffle()
+	g.Minimize()
+	g.Normalize()
 	err = ioutil.WriteFile("ex_shuffled_minimized_normalized.svg", []byte(g.ToSVG()), os.ModePerm)
 	if err != nil {
 		t.Fatal(err)
