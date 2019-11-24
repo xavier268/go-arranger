@@ -130,25 +130,64 @@ func (g *WithLossCombined) DLoss() (dx, dy []float64) {
 	return dx, dy
 }
 
+// Clone makes a deep copy
+func (g *WithLossCombined) Clone() *WithLossCombined {
+	gg := NewWithLossCombined(g.Graph.Clone())
+	gg.L2, gg.Lambda, gg.DistMin, gg.DistTargt = g.L2, g.Lambda, g.DistMin, g.DistTargt
+	gg.DistMinW, gg.DistTargtW = g.DistMinW, g.DistTargtW
+	gg.Clw, gg.Repw, gg.Iter, gg.AnnW = g.Clw, g.Repw, g.Iter, g.AnnW
+	return gg
+}
+
+// DLossEst estimates the gradient of the loss function w.r.t. the x and y coordinates.
+// Mainly used for debugging & testing, not very efficient.
+func (g *WithLossCombined) DLossEst() (dx, dy []float64) {
+
+	// Step used to estimate the gradient
+	var step float64
+	step = 1e-15
+
+	dx, dy = make([]float64, g.Size()), make([]float64, g.Size())
+	var gg *WithLossCombined
+
+	for i := range dx {
+		gg = g.Clone()
+		gg.x[i] += step
+		dx[i] = (gg.Loss() - g.Loss()) / step
+
+		gg = g.Clone()
+		gg.y[i] += step
+		dy[i] = (gg.Loss() - g.Loss()) / step
+	}
+
+	return dx, dy
+}
+
 // Minimize will adjust the node position to minimize the loss function.
 // Lambda is the step precision, Iter is the nbr of iterations.
 // Annealing is implemented with random values to attempt to capture global minimum, not being stuck with local minimum.
 // Results are currently highly sensitive to the LossParam parameters.
 func (g *WithLossCombined) Minimize() {
 	for it := 1; it <= g.Iter; it++ {
-		dx, dy := g.DLoss()
+		dx, dy := g.DLossEst()
 
 		// Annealing factor
 		ann := g.AnnW * float64(g.Iter) / float64(it)
 
 		for i := 0; i < g.Size(); i++ {
-			g.x[i] += g.Lambda * (dx[i] + ann*rand.Float64())
-			g.y[i] += g.Lambda * (dy[i] + ann*rand.Float64())
+			g.x[i] += -g.Lambda * (dx[i] + ann*rand.Float64())
+			g.y[i] += -g.Lambda * (dy[i] + ann*rand.Float64())
 		}
 
 		// Debug
 		if it%(g.Iter/10) == 0 || it < 5 {
-			fmt.Printf("\n%d : loss = %f", it, g.Loss())
+			var g2 float64
+			for i := range dx {
+				g2 += dx[i]*dx[i] + dy[i]*dy[i]
+			}
+
+			fmt.Printf("\n%d : \tloss = %e", it, g.Loss())
+			fmt.Printf("\tGrad = %e", math.Sqrt(g2))
 		}
 	}
 

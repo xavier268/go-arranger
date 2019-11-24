@@ -17,6 +17,23 @@ func NewGraph() *Graph {
 	return g
 }
 
+// Clone make a (deep) clone
+func (g *Graph) Clone() *Graph {
+	gg := NewGraph()
+	for i := range g.x {
+		gg.x, gg.y, gg.legend = append(gg.x, g.x[i]), append(gg.y, g.y[i]), append(gg.legend, g.legend[i])
+
+		for j := range g.x {
+			if g.Linked(i, j) {
+				gg.Link(i, j)
+			}
+		}
+
+	}
+
+	return gg
+}
+
 // Size retun the number of nodes.
 // Nodes are numbered from O to Size -1.
 func (g *Graph) Size() int {
