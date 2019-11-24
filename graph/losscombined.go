@@ -14,11 +14,12 @@ import (
 // DistMin is a MINIMUM distance to try to keep for NON connected nodes,
 // DistMinW is the associated weight,
 // Clw is the cumulative length weight for connected nodes
+// Repw is the weight for the repulsion force between any nodes
 type WithLossCombined struct {
 	*Graph
-	L2, DistTargt, DistTargtW, DistMin, DistMinW, Clw float64
-	Iter                                              int
-	Lambda                                            float64
+	L2, DistTargt, DistTargtW, DistMin, DistMinW, Clw, Repw float64
+	Iter                                                    int
+	Lambda                                                  float64
 }
 
 // NewWithLossCombined constructor from a Graph object.
@@ -28,13 +29,14 @@ func NewWithLossCombined(gg *Graph) *WithLossCombined {
 
 	// default parameters
 	g.Lambda = 0.00001
-	g.L2 = 0.001
-	g.DistTargt = 0.3
+	g.L2 = 0.
+	g.DistTargt = 1.
 	g.DistTargtW = 1.
-	g.DistMin = 0.3
-	g.DistMinW = 1.
-	g.Clw = 5.
-	g.Iter = 500
+	g.DistMin = 1.
+	g.DistMinW = 0.
+	g.Clw = 1.
+	g.Repw = 1.
+	g.Iter = 1
 
 	return g
 }
@@ -54,9 +56,12 @@ func (g *WithLossCombined) Loss() (loss float64) {
 
 	for i := 0; i < g.Size(); i++ {
 		for j := i + 1; j < g.Size(); j++ {
+			// For all node pair, repulsion cost
+			d := g.Dist2(i, j)
+			loss += g.Repw / d
+
 			if g.Linked(i, j) {
 				// Connected links as compared to target
-				d := g.Dist2(i, j)
 				loss += g.DistTargtW * (d - g.DistTargt) * (d - g.DistTargt)
 
 				// Cumulative length penalty
@@ -64,7 +69,6 @@ func (g *WithLossCombined) Loss() (loss float64) {
 
 			} else {
 				// Not connected penalty if below DistMin
-				d := g.Dist2(i, j)
 				if d < g.DistMin {
 					loss += g.DistMinW * (g.DistMin - d)
 				}
@@ -87,9 +91,17 @@ func (g *WithLossCombined) DLoss() (dx, dy []float64) {
 
 	for i := 0; i < g.Size(); i++ {
 		for j := i + 1; j < g.Size(); j++ {
+			// repulsion cost
+			d := g.Dist2(i, j)
+			d2 := d * d
+			dx[i] += -2 * g.Repw * g.x[i] / d2
+			dx[j] += -2 * g.Repw * g.x[j] / d2
+			dy[i] += -2 * g.Repw * g.y[i] / d2
+			dy[j] += -2 * g.Repw * g.y[j] / d2
+
 			if g.Linked(i, j) {
 				// target length
-				d := g.Dist2(i, j)
+
 				dx[i] += g.DistTargtW * 2 * (d - g.DistTargt) * (2 * g.x[i])
 				dx[j] += g.DistTargtW * 2 * (d - g.DistTargt) * (2 * g.x[j])
 				dy[i] += g.DistTargtW * 2 * (d - g.DistTargt) * (2 * g.y[i])
@@ -103,7 +115,6 @@ func (g *WithLossCombined) DLoss() (dx, dy []float64) {
 				dy[j] += -g.Clw * g.y[j] / dd
 
 			} else {
-				d := g.Dist2(i, j)
 				if d < g.DistMin {
 					dx[i] += -g.DistMinW * (2 * g.x[i])
 					dx[j] += -g.DistMinW * (2 * g.x[j])
