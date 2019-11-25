@@ -8,6 +8,12 @@ import (
 
 // WithLossCombined is a Graph that can be optimized
 // for the provided Loss function, combining various penalties.
+type WithLossCombined struct {
+	*Graph
+	*LossParam
+}
+
+// LossParam are the parameters used for the Loss and Minimization functions.
 // L2 is the regularization weight,
 // DistTargt is the TARGET distance for connected nodes,
 // DistTargtW is the weight associated with TARGET distance,
@@ -16,8 +22,7 @@ import (
 // Clw is the cumulative length weight for connected nodes
 // Repw is the weight for the repulsion force between any nodes
 // AnnW is the Annealing Weight
-type WithLossCombined struct {
-	*Graph
+type LossParam struct {
 	L2, DistTargt, DistTargtW, DistMin, DistMinW, Clw, Repw float64
 	AnnW                                                    float64
 	Iter                                                    int
@@ -28,6 +33,7 @@ type WithLossCombined struct {
 func NewWithLossCombined(gg *Graph) *WithLossCombined {
 	g := new(WithLossCombined)
 	g.Graph = gg
+	g.LossParam = new(LossParam)
 
 	// default parameters
 	g.Lambda = 0.00001
@@ -110,12 +116,12 @@ func (g *WithLossCombined) DLoss() (dx, dy []float64) {
 				dy[i] += g.DistTargtW * 2 * (d - g.DistTargt) * (2 * (g.y[i] - g.y[j]))
 				dy[j] += g.DistTargtW * 2 * (d - g.DistTargt) * (2 * (g.y[j] - g.y[i]))
 
-				// Cumulatif length penanlty
+				// Cumulatif length penalty
 				dd := math.Sqrt(d)
-				dx[i] += -g.Clw * (g.x[i] - g.x[j]) / dd
-				dx[j] += -g.Clw * (g.x[j] - g.x[i]) / dd
-				dy[i] += -g.Clw * (g.y[i] - g.y[j]) / dd
-				dy[j] += -g.Clw * (g.y[j] - g.y[i]) / dd
+				dx[i] += g.Clw * (g.x[i] - g.x[j]) / dd
+				dx[j] += g.Clw * (g.x[j] - g.x[i]) / dd
+				dy[i] += g.Clw * (g.y[i] - g.y[j]) / dd
+				dy[j] += g.Clw * (g.y[j] - g.y[i]) / dd
 
 			} else {
 				if d < g.DistMin {
@@ -145,7 +151,7 @@ func (g *WithLossCombined) DLossEst() (dx, dy []float64) {
 
 	// Step used to estimate the gradient
 	var step float64
-	step = 1e-15
+	step = 1e-6
 
 	dx, dy = make([]float64, g.Size()), make([]float64, g.Size())
 	var gg *WithLossCombined
@@ -168,8 +174,18 @@ func (g *WithLossCombined) DLossEst() (dx, dy []float64) {
 // Annealing is implemented with random values to attempt to capture global minimum, not being stuck with local minimum.
 // Results are currently highly sensitive to the LossParam parameters.
 func (g *WithLossCombined) Minimize() {
+	g.minimize(false)
+}
+
+// minimize using either estimate or calculation for gradient.
+func (g *WithLossCombined) minimize(useEstimate bool) {
 	for it := 1; it <= g.Iter; it++ {
-		dx, dy := g.DLossEst()
+		var dx, dy []float64
+		if useEstimate {
+			dx, dy = g.DLossEst()
+		} else {
+			dx, dy = g.DLoss()
+		}
 
 		// Annealing factor
 		ann := g.AnnW * float64(g.Iter) / float64(it)

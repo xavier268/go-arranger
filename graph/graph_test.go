@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"math"
 	"math/rand"
 	"os"
 	"testing"
@@ -50,7 +51,7 @@ func TestNormalize(t *testing.T) {
 
 }
 func TestArrange(t *testing.T) {
-
+	// t.Skip()
 	var err error
 
 	g := NewWithLossCombined(NewGraph())
@@ -62,7 +63,7 @@ func TestArrange(t *testing.T) {
 	g.DistMinW = 0.1
 	g.Clw = 1
 	g.Repw = 5
-	g.Iter = 5000
+	g.Iter = 50000
 	g.AnnW = 1.
 
 	g.Add(1.654, 1., "0")
@@ -131,4 +132,39 @@ func TestArrange(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+}
+
+func TestGradientCalculation(t *testing.T) {
+	// Threshold (relative error)
+	ertest := 1e-3
+
+	g := NewWithLossCombined(NewGraph())
+
+	g.Clw = 1.
+	g.Repw = 1.
+	g.DistTargtW = 1.
+	g.DistMinW = 1.
+
+	g.Add(1.654, 1., "0")
+	g.Add(0.654, 25., "1")
+	g.Add(2., 1., "2")
+	g.Add(2., 2., "3")
+	g.Link(3, 0)
+	g.Link(1, 2)
+
+	g.Shuffle()
+	gg := g.Clone()
+
+	dx, dy := g.DLoss()
+	ddx, ddy := gg.DLossEst()
+
+	for i := range dx {
+		fmt.Printf("\nGrad calculated:%e\testimated:%e\terror:%e", dx[i], ddx[i], dx[i]-ddx[i])
+		fmt.Printf("\nGrad calculated:%e\testimated:%e\terror:%e", dy[i], ddy[i], dy[i]-ddy[i])
+		if (math.Abs(dx[i]-ddx[i]) > ertest*math.Abs(dx[i])) || (math.Abs(dx[i]-ddx[i]) > ertest*math.Abs(dy[i])) {
+			t.Fatal("Estimated and calculated gradient are too different !")
+		}
+	}
+	fmt.Println()
+
 }
