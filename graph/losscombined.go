@@ -36,16 +36,17 @@ func NewWithLossCombined(gg *Graph) *WithLossCombined {
 	g.LossParam = new(LossParam)
 
 	// default parameters
-	g.Lambda = 0.00001
-	g.L2 = 0.
-	g.DistTargt = 1.
+	g.Lambda = 1e-8
+	g.L2 = 1e-6
+	g.DistTargt = 0.01
 	g.DistTargtW = 1.
-	g.DistMin = 1.
-	g.DistMinW = 0.
+	g.DistMin = 0.01
+	g.DistMinW = 0.1
 	g.Clw = 1.
 	g.Repw = 1.
-	g.Iter = 1
-	g.AnnW = 0.
+	g.Iter = 50
+
+	g.AnnW = 1.
 
 	return g
 }

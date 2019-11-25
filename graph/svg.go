@@ -6,8 +6,8 @@ import "fmt"
 // Display is intended for normalized grph, ie with value between -1 and +1.
 func (g *Graph) ToSVG() string {
 
-	r := 5                         // radius for nodes
-	w := 2                         // stroke width
+	r := 1                         // radius for nodes
+	w := 1                         // stroke width
 	m := 30                        // margin of display
 	var mx, my float64 = 1200, 600 // Width and  height of display in pixels
 
