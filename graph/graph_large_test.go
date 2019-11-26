@@ -47,6 +47,28 @@ func TestLargeGraph(t *testing.T) {
 
 }
 
+func TestGCD(t *testing.T) {
+	if GCD(3, 8) != 1 {
+		t.Fatal("GCD calculation error")
+	}
+	if GCD(8, 3) != 1 {
+		t.Fatal("GCD calculation error")
+	}
+	if GCD(3, 15) != 3 {
+		t.Fatal("GCD calculation error")
+	}
+	if GCD(15, 3) != 3 {
+		t.Fatal("GCD calculation error")
+	}
+	if GCD(1, 15) != 1 {
+		t.Fatal("GCD calculation error")
+	}
+	if GCD(15, 1) != 1 {
+		t.Fatal("GCD calculation error")
+	}
+
+}
+
 // GCD calculates GCD iteratively using remainder.
 func GCD(a, b int) int {
 	for b != 0 {

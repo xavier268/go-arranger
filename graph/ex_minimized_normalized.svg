@@ -6,36 +6,36 @@
 	xmlns:ev="http://www.w3.org/2001/xml-events">
 	
 <rect x="30" y="30" width="1200" height="600" stroke="grey" fill="transparent" />
-<circle cx="1047" cy="630" r="1" stroke="red" fill="transparent" stroke-width="1"/>
-<text x="1048" y="631" >0</text>
-<line x1="1047" y1="630" x2="558" y2="541" stroke="blue" stroke-width="1"/>
-<line x1="1047" y1="630" x2="1230" y2="236" stroke="blue" stroke-width="1"/>
-<line x1="1047" y1="630" x2="861" y2="384" stroke="blue" stroke-width="1"/>
-<line x1="1047" y1="630" x2="529" y2="239" stroke="blue" stroke-width="1"/>
-<circle cx="558" cy="541" r="1" stroke="red" fill="transparent" stroke-width="1"/>
-<text x="559" y="542" >1</text>
-<line x1="558" y1="541" x2="855" y2="30" stroke="blue" stroke-width="1"/>
-<line x1="558" y1="541" x2="861" y2="384" stroke="blue" stroke-width="1"/>
-<line x1="558" y1="541" x2="189" y2="577" stroke="blue" stroke-width="1"/>
-<line x1="558" y1="541" x2="30" y2="265" stroke="blue" stroke-width="1"/>
-<circle cx="855" cy="30" r="1" stroke="red" fill="transparent" stroke-width="1"/>
-<text x="856" y="31" >2</text>
-<line x1="855" y1="30" x2="1230" y2="236" stroke="blue" stroke-width="1"/>
-<line x1="855" y1="30" x2="861" y2="384" stroke="blue" stroke-width="1"/>
-<circle cx="1230" cy="236" r="1" stroke="red" fill="transparent" stroke-width="1"/>
-<text x="1231" y="237" >3</text>
-<line x1="1230" y1="236" x2="861" y2="384" stroke="blue" stroke-width="1"/>
-<line x1="1230" y1="236" x2="529" y2="239" stroke="blue" stroke-width="1"/>
-<circle cx="861" cy="384" r="1" stroke="red" fill="transparent" stroke-width="1"/>
-<text x="862" y="385" >4</text>
-<line x1="861" y1="384" x2="189" y2="577" stroke="blue" stroke-width="1"/>
-<circle cx="529" cy="239" r="1" stroke="red" fill="transparent" stroke-width="1"/>
-<text x="530" y="240" >5</text>
-<line x1="529" y1="239" x2="189" y2="577" stroke="blue" stroke-width="1"/>
-<line x1="529" y1="239" x2="30" y2="265" stroke="blue" stroke-width="1"/>
-<circle cx="189" cy="577" r="1" stroke="red" fill="transparent" stroke-width="1"/>
-<text x="190" y="578" >6</text>
-<line x1="189" y1="577" x2="30" y2="265" stroke="blue" stroke-width="1"/>
-<circle cx="30" cy="265" r="1" stroke="red" fill="transparent" stroke-width="1"/>
-<text x="31" y="266" >7</text>
+<circle cx="750" cy="30" r="1" stroke="red" fill="transparent" stroke-width="1"/>
+<text x="751" y="31" >0</text>
+<line x1="750" y1="30" x2="607" y2="472" stroke="blue" stroke-width="1"/>
+<line x1="750" y1="30" x2="950" y2="521" stroke="blue" stroke-width="1"/>
+<line x1="750" y1="30" x2="822" y2="281" stroke="blue" stroke-width="1"/>
+<line x1="750" y1="30" x2="388" y2="229" stroke="blue" stroke-width="1"/>
+<circle cx="607" cy="472" r="1" stroke="red" fill="transparent" stroke-width="1"/>
+<text x="608" y="473" >1</text>
+<line x1="607" y1="472" x2="1230" y2="320" stroke="blue" stroke-width="1"/>
+<line x1="607" y1="472" x2="822" y2="281" stroke="blue" stroke-width="1"/>
+<line x1="607" y1="472" x2="332" y2="630" stroke="blue" stroke-width="1"/>
+<line x1="607" y1="472" x2="30" y2="410" stroke="blue" stroke-width="1"/>
+<circle cx="1230" cy="320" r="1" stroke="red" fill="transparent" stroke-width="1"/>
+<text x="1231" y="321" >2</text>
+<line x1="1230" y1="320" x2="950" y2="521" stroke="blue" stroke-width="1"/>
+<line x1="1230" y1="320" x2="822" y2="281" stroke="blue" stroke-width="1"/>
+<circle cx="950" cy="521" r="1" stroke="red" fill="transparent" stroke-width="1"/>
+<text x="951" y="522" >3</text>
+<line x1="950" y1="521" x2="822" y2="281" stroke="blue" stroke-width="1"/>
+<line x1="950" y1="521" x2="388" y2="229" stroke="blue" stroke-width="1"/>
+<circle cx="822" cy="281" r="1" stroke="red" fill="transparent" stroke-width="1"/>
+<text x="823" y="282" >4</text>
+<line x1="822" y1="281" x2="332" y2="630" stroke="blue" stroke-width="1"/>
+<circle cx="388" cy="229" r="1" stroke="red" fill="transparent" stroke-width="1"/>
+<text x="389" y="230" >5</text>
+<line x1="388" y1="229" x2="332" y2="630" stroke="blue" stroke-width="1"/>
+<line x1="388" y1="229" x2="30" y2="410" stroke="blue" stroke-width="1"/>
+<circle cx="332" cy="630" r="1" stroke="red" fill="transparent" stroke-width="1"/>
+<text x="333" y="631" >6</text>
+<line x1="332" y1="630" x2="30" y2="410" stroke="blue" stroke-width="1"/>
+<circle cx="30" cy="410" r="1" stroke="red" fill="transparent" stroke-width="1"/>
+<text x="31" y="411" >7</text>
 </svg>
